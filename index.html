@@ -12,16 +12,37 @@
     body {
         background-image: url('wall.jpg');
         background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    h2 {
+      font-family: 'Montserrat', sans-serif;
+      color: #F0C8C4;
     }
 
     h3 {
-      font-family: 'Anton', sans-serif;
-      font-size: 50px;
+        font-family: 'Anton', sans-serif;
+        font-size: 50px;
+        color: #313B3A;
     }
 
     li {
-      font-family: 'Montserrat', sans-serif;
+        font-family: 'Montserrat', sans-serif;
     }
+
+    ul li.checked {
+        text-decoration: line-through;
+    }
+
+    .btn {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .close:hover {
+        color: #F46926;
+    }
+
 
     </style>
     <title>To Do List</title>
@@ -29,39 +50,32 @@
 
 <body>
     <div class="container my-5 p-5">
-        <div id="myDIV" class="row mb-20">
-            <div class="col-12">
-                <h3 class="text-center">My To Do List</h3>
+        <div id="myDIV" class="row mb-4">
+            <div class="col-12 text-center">
+                <h3>My To Do List</h3>
+                <h2 id="dateDiv"></h2>
             </div>
         </div>
+       
         <div class="row">
             <div class="col-12 text-center">
                 <div>
                     <input type="text" id="myInput" placeholder="Task...">
-                    <button onclick="newElement()" class="addBtn btn btn-dark">Add</button>
+                    <button onclick="newElement()" class="addBtn btn btn-dark" id="btn">Add</button>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+    <div class="card mx-auto my-5" id="myCard" style="max-width: 20rem; cursor:pointer">
 
-   <div class="card mx-auto my-5" style="width: 25rem;">
-   
-            <ul class="list-group text-center" id="myUL"  style="list-style: none;">
-                <li>Hit the gym</li>
-                <li class="checked">Pay bills</li>
-                <li>Meet George</li>
-                <li>Buy eggs</li>
-                <li>Read a book</li>
-                <li>Organize office</li>
-            </ul>
-          </div>
-        </div>
+        <ul class="list-group text-center" id="myUL" style="list-style: none;" >
+        
+        </ul>
     </div>
     <div class="row">
-      <div class="col-12 text-center my-2">
-        <button onclick="clearAll()" class="addBtn btn btn-dark">Clear All</button>
-      </div>
+        <div class="col-12 text-center my-2">
+            <button onclick="clearAll()" class="addBtn btn btn-dark">Clear All</button>
+        </div>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -70,6 +84,19 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <!-- To Do List JavaScript -->
     <script type="text/javascript">
+  
+
+    //display today's date
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = 'For ' + mm + '/' + dd + '/' + yyyy;
+
+    var t = document.createTextNode(today);
+    dateDiv.appendChild(t);
+
     // Create a "close" button and append it to each list item
     var myNodelist = document.getElementsByTagName("LI");
     var i;
@@ -93,11 +120,13 @@
 
     // Clear all tasks using clear all button
     function clearAll() {
+        let myCard = document.getElementById("myCard");
+        myCard.style.display = "none";
         let list = document.getElementById("myUL");
         list.innerHTML = null;
     }
 
-    // Add a "checked" symbol when clicking on a list item
+    // Add a strikethrough when clicking on a list item
     var list = document.querySelector('ul');
     list.addEventListener('click', function(ev) {
         if (ev.target.tagName === 'LI') {
@@ -105,8 +134,19 @@
         }
     }, false);
 
+
+    //create new list item when hitting return
+    document.getElementById("myInput")
+        .addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("btn").click();
+            }
+        });
     // Create a new list item when clicking on the "Add" button
     function newElement() {
+        let myCard = document.getElementById("myCard");
+        myCard.style.display = "block";
         var li = document.createElement("li");
         var inputValue = document.getElementById("myInput").value;
         var t = document.createTextNode(inputValue);
